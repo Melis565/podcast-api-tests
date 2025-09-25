@@ -1,6 +1,7 @@
 import request from 'supertest';
-import Register from '../types/auth';
-import { generateRandomString } from '../utils/string-utils'
+import {generateRandomString} from '../utils/string-utils'
+import { AuthToken } from '../types/auth';
+import { doLogin } from '../utils/auth-utils';
 
 const podcastalkBaseUrl = "https://tame-violante-ayyildizfatih-50bbd5b4.koyeb.app";
 
@@ -57,8 +58,8 @@ describe.skip('POST /login tests', () => {
 
 });
 
-describe('POST /register tests', () => {
-  it.skip('POST /register should return ok', async () => {
+describe.skip('POST /register tests', () => {
+  it('POST /register should return ok', async () => {
     const response = await request(podcastalkBaseUrl)
       .post('/api/v1/auth/email/login').send({
         email: "test1@example.com",
@@ -129,4 +130,72 @@ describe('POST /register tests', () => {
     expect(response.status).toBe(422);
     expect(response.body.errors).toHaveProperty('lastName', "lastName should not be empty");
   });
+
+});
+
+
+describe('GET /me tests', () => {
+
+  let token: AuthToken | null = null;
+
+  beforeAll(async () => {
+    token = await doLogin({email: "test1@example.com", password: "secret"});
+    console.log('Token saved !!!')
+  });
+
+  it('GET /me should return ok', async () => {
+    const response = await request(podcastalkBaseUrl)
+      .get('/api/v1/auth/me')
+      .set('Authorization', `Bearer ${token?.accessToken}`);
+
+      console.log(response.body);
+    expect(response.status).toBe(200);
+  });
+
+  it('GET /me should return an object', async () => {
+
+    
+    const response = await request(podcastalkBaseUrl)
+      .get('/api/v1/auth/me')
+      .set('Authorization', `Bearer ${token?.accessToken}`);
+
+    expect(typeof response.body).toBe("object");
+   
+  });
+
+  it('GET /me should return an object with a correct type', async () => {
+    const response = await request(podcastalkBaseUrl)
+      .get('/api/v1/auth/me')
+      .set('Authorization', `Bearer ${token?.accessToken}`);
+
+    console.log('GET /me should return an object with a correct type:',response.body);
+    expect(response.body).toBeInstanceOf(Object);
+
+    // Icerisinde bu degerlerin oldiugunu test et ve sadece bu degerlerin oldugunu test et
+    // Verify that no additional properties are present
+    const allowedProperties = [
+      'id', 
+      'email', 
+      'provider', 
+      'socialId', 
+      'firstName', 
+      'lastName', 
+      'createdAt', 
+      'updatedAt', 
+      'deletedAt', 
+      'subscription', 
+      'status', 
+      'role'
+    ];
+    const responseProperties = Object.keys(response.body);
+    responseProperties.forEach(prop => {
+      expect(allowedProperties).toContain(prop);
+    });
+
+    expect(typeof response.body.subscription).toBe("object");
+    expect(typeof response.body.status).toBe("object");
+    expect(typeof response.body.role).toBe("object");
+
+  });
+
 });
