@@ -1,0 +1,33 @@
+name: Run Tests
+
+# When to run this workflow
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+# Define the job
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
+    
+    # Run tests
+    - name: Run tests
+      run: npm run test
