@@ -1,4 +1,4 @@
-export function generateRandomString(length: number = 7): string {
+const generateRandomString = (length: number = 7): string => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
@@ -6,3 +6,5 @@ export function generateRandomString(length: number = 7): string {
   }
   return result;
 }
+
+export { generateRandomString };

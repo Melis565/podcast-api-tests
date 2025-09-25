@@ -3,10 +3,17 @@ type Login = {
   password:string
 };
 
-
+//Login ve Register ı ayırmak için Register ı Login den extend ettik.
+//Bu şekilde eklenen Login özellikleri Register da da olacak ve ana root a eklenecek
 type Register = Login & {
  firstName:string,
  lastName:string
 };
 
-export default Register;
+type AuthToken = {
+  accessToken: string,
+  expiresIn: number,
+  refreshToken: string
+}
+
+export { Login, Register, AuthToken };
