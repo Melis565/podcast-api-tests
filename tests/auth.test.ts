@@ -5,7 +5,7 @@ import { doLogin } from '../utils/auth-utils';
 
 const podcastalkBaseUrl = "https://tame-violante-ayyildizfatih-50bbd5b4.koyeb.app";
 
-describe.skip('POST /login tests', () => {
+describe('POST /login tests', () => {
   it('should return ok', async () => {
     const response = await request(podcastalkBaseUrl)
       .post('/api/v1/auth/email/login').send({
@@ -58,8 +58,8 @@ describe.skip('POST /login tests', () => {
 
 });
 
-describe.skip('POST /register tests', () => {
-  it('POST /register should return ok', async () => {
+describe('POST /register tests', () => {
+  it.skip('POST /register should return ok', async () => {
     const response = await request(podcastalkBaseUrl)
       .post('/api/v1/auth/email/login').send({
         email: "test1@example.com",
